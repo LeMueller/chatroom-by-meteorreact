@@ -22,7 +22,7 @@ class App extends Component{
 			currentUser: this.props.currentUser,
 			currentChat: {
 				username:'',
-				id:''
+				_id:''
 			}
 		}
 
@@ -60,22 +60,30 @@ class App extends Component{
 
 	renderMessages(){
 		let messages=this.props.messages;
-if(this.props.currentUser){
-//console.log(this.props.currentUser)
-		let selectedMessages=messages.filter(message=>{
 
-			if(message.author.id===this.props.currentUser._id && message.recipient._id === this.state.currentChat._id){
-				return message;
-			}
-		})
+		if(this.props.currentUser && this.state.currentChat){
 
-		return selectedMessages.map((message,index)=>(
-			<Message
-				key={index}
-				message={message}
-				currentUser={this.props.currentUser}/>
-		))
-}
+			let selectedMessages=messages.filter(message=>{
+
+				if(message.author.id===this.props.currentUser._id && message.recipient._id === this.state.currentChat._id){
+
+					console.log("message from me");
+					return message;
+				} else if (message.author.id===this.state.currentChat._id && message.recipient._id===this.props.currentUser._id){
+
+					console.log("message from other");
+
+					return message;
+				}
+			})
+
+			return selectedMessages.map((message,index)=>(
+				<Message
+					key={index}
+					message={message}
+					currentUser={this.props.currentUser}/>
+			))
+		}
 	}
 
 	/**

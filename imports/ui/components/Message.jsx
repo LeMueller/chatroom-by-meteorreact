@@ -25,8 +25,6 @@ export default class Message extends Component{
 	render(){
 		let message=this.props.message;
 
-		console.log("message.length:::"+message);
-
 		let className;
 		if(message.author.id=this.props.currentUser._id){
 			className='messages-item owner';
