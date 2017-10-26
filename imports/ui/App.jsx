@@ -2,9 +2,15 @@ import React, {Component} from 'react';
 import ReactDOM from 'react-dom';
 import {createContainer} from 'meteor/react-meteor-data';
 
+import Sidebar from './containers/Sidebar.jsx';
+
 import {Messages} from '../api/messagesserver.js';
 
+
+
 import AccountsUIWrapper from './AccountsUIWrapper.jsx';
+
+
 
 class App extends Component{
 
@@ -22,21 +28,7 @@ class App extends Component{
 	componentWillReceiveProps(nextProps){
 
 	}
-
 	
-
-	getCurrentUser(){
-
-		let cUser= this.props.currentUser;
-
-		if(cUser){
-			return(
-			<div key={1}> {cUser.username} </div>
-		)
-		}
-		
-	}
-
 	handleSelectUser(user){
 		if(user){
 			this.setState({
@@ -76,6 +68,19 @@ class App extends Component{
 		))
 	}
 
+	/**
+	getCurrentUser(){
+
+		let cUser= this.props.currentUser;
+
+		if(cUser){
+			return(
+			<div key={1}> {cUser.username} </div>
+		)
+		}
+		
+	}
+
 	renderMessages2(){
 		return this.props.messages.map((message, index)=>(
 			<div key={index}>{message.text}</div>
@@ -111,6 +116,21 @@ class App extends Component{
 				<div>{this.renderMessages2()}</div>
 				<div>{this.getCurrentUser()}</div>
 				<div>{this.getAllUsers()}</div>
+			</div>
+		)
+	}
+	**/
+
+	render(){
+		return(
+			<div className="container">
+				<AccountsUIWrapper />
+				<Sidebar
+					currentUser={this.props.currentUser}
+					currentChat={this.state.currentChat}
+					allUsers={this.props.allUsers}
+					onSelectUser={this.handleSelectUser}/>
+				
 			</div>
 		)
 	}
