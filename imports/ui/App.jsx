@@ -3,6 +3,8 @@ import ReactDOM from 'react-dom';
 import {createContainer} from 'meteor/react-meteor-data';
 
 import Sidebar from './containers/Sidebar.jsx';
+import ChatContainer from './containers/ChatContainer.jsx';
+import Message from './components/Message.jsx';
 
 import {Messages} from '../api/messagesserver.js';
 
@@ -25,6 +27,8 @@ class App extends Component{
 		}
 
 		this.handleSelectUser = this.handleSelectUser.bind(this);
+		this.handleSubmit=this.handleSubmit.bind(this);
+		this.renderMessages = this.renderMessages.bind(this);
 	}
 
 	componentWillReceiveProps(nextProps){
@@ -32,6 +36,7 @@ class App extends Component{
 	}
 	
 	handleSelectUser(user){
+
 		if(user){
 			this.setState({
 				currentChat:user
@@ -42,21 +47,23 @@ class App extends Component{
 	}
 
 	handleSubmit(event){
-		event.perventDefault();
-		const text=decument.getElementById('message-input').value;
+		event.preventDefault();
+		const text=document.getElementById('message-input').value;
 		const recipient=this.state.currentChat;
 
 		if(text){
-			Meteor.call('message.insert',text,recipient);
+			Meteor.call('messages.insert',text,recipient);
 		}
 
 		document.getElementById('message-input').value='';
 	}
 
 	renderMessages(){
-		var messages=this.props.messages;
-
+		let messages=this.props.messages;
+if(this.props.currentUser){
+//console.log(this.props.currentUser)
 		let selectedMessages=messages.filter(message=>{
+
 			if(message.author.id===this.props.currentUser._id && message.recipient._id === this.state.currentChat._id){
 				return message;
 			}
@@ -68,6 +75,7 @@ class App extends Component{
 				message={message}
 				currentUser={this.props.currentUser}/>
 		))
+}
 	}
 
 	/**
@@ -96,7 +104,7 @@ class App extends Component{
 
 		if(aUsers){
 			aUsersItem=aUsers.map((item,index)=>{
-				console.log(item);
+				//console.log(item);
 				return(
 					<div key={index}>{item._id}</div>
 				)
@@ -132,6 +140,13 @@ class App extends Component{
 					currentChat={this.state.currentChat}
 					allUsers={this.props.allUsers}
 					onSelectUser={this.handleSelectUser}/>
+
+				<div className="chat-container">
+					<ChatContainer
+						currentChat={this.state.currentChat}
+						renderMessages={this.renderMessages()}
+						onSubmit={this.handleSubmit}/>
+				</div>
 				
 			</div>
 		)

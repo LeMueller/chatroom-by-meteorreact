@@ -20,8 +20,6 @@ export default class UserLsit extends Component{
 				}
 			});
 
-			console.log("filteredList"+filteredList)
-
 			list = filteredList.map((user, index)=>{
 
 				//console.log("user in list"+user);
@@ -35,7 +33,7 @@ export default class UserLsit extends Component{
 			});
 		}
 
-		console.log("list:"+list);
+		//console.log("list:"+list);
 
 		return(
 			<ul className="user-list">
