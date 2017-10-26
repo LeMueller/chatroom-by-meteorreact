@@ -23,6 +23,8 @@ class App extends Component{
 				id:''
 			}
 		}
+
+		this.handleSelectUser = this.handleSelectUser.bind(this);
 	}
 
 	componentWillReceiveProps(nextProps){

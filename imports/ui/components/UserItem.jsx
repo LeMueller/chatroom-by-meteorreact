@@ -3,6 +3,8 @@ import React, {Component} from 'react';
 export default class UserItem extends Component{
 	constructor(props){
 		super(props);
+
+		this.selectUser = this.selectUser.bind(this);
 	}
 
 	selectUser(event){
