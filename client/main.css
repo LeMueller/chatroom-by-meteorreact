@@ -1,1 +1,22 @@
 /* CSS declarations go here */
+.account {float: left; width:50px;}
+
+.sidebar-container {position:relative; top: 50px; left: -50px; height: 500px; width:150px; float:left; border: solid 1px red;}
+
+.chat-container {position:relative; top: 50px; height:500px; width:400px; float:left; border:solid 1px green;}
+
+.current-chat-name {height: 50px; border: solid 1px yellow}
+
+.MessagesContainer-container {height: 400px; overflow:scroll; border: solid 1px blue;}
+
+.message-form-container {height:50px; border: solid 1px orange}
+
+#message-input {height: 50px; width: 70%; float: left;}
+
+#submit-button {height: 50px; width: 25%; float: right;}
+
+.messages-item {margin: 5px}
+
+.owner {color: green; text-align: right;}
+
+.others {color: blue;}

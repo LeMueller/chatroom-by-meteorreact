@@ -1,5 +1,7 @@
 import React, {Component} from 'react';
 
+const util=require('util');
+
 export default class Message extends Component{
 	constructor(props){
 		super(props);
@@ -26,7 +28,14 @@ export default class Message extends Component{
 		let message=this.props.message;
 
 		let className;
-		if(message.author.id=this.props.currentUser._id){
+
+		//console.log("in message render(message):::"+util.inspect(message, false,null));
+
+		//console.log("in message render(author.id):::"+message.author.id);
+		//console.log("in message render(currentUser._id):::"+this.props.currentUser._id);
+
+
+		if(message.author.id===this.props.currentUser._id){
 			className='messages-item owner';
 		}else{
 			className='messages-item others';

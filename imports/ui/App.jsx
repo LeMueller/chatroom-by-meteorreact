@@ -67,11 +67,11 @@ class App extends Component{
 
 				if(message.author.id===this.props.currentUser._id && message.recipient._id === this.state.currentChat._id){
 
-					console.log("message from me");
+					//console.log("message from me");
 					return message;
 				} else if (message.author.id===this.state.currentChat._id && message.recipient._id===this.props.currentUser._id){
 
-					console.log("message from other");
+					//console.log("message from other");
 
 					return message;
 				}
@@ -85,59 +85,6 @@ class App extends Component{
 			))
 		}
 	}
-
-	/**
-	getCurrentUser(){
-
-		let cUser= this.props.currentUser;
-
-		if(cUser){
-			return(
-			<div key={1}> {cUser.username} </div>
-		)
-		}
-		
-	}
-
-	renderMessages2(){
-		return this.props.messages.map((message, index)=>(
-			<div key={index}>{message.text}</div>
-		));
-	}
-
-	getAllUsers(){
-		let aUsers=this.props.allUsers;
-
-		let aUsersItem;
-
-		if(aUsers){
-			aUsersItem=aUsers.map((item,index)=>{
-				//console.log(item);
-				return(
-					<div key={index}>{item._id}</div>
-				)
-			}
-			)
-		}
-
-		return aUsersItem;
-	}
-
-	render(){
-		return (
-			<div>
-
-				<AccountsUIWrapper />
-
-				<div>Heollo messages!</div>
-				
-				<div>{this.renderMessages2()}</div>
-				<div>{this.getCurrentUser()}</div>
-				<div>{this.getAllUsers()}</div>
-			</div>
-		)
-	}
-	**/
 
 	render(){
 		return(
