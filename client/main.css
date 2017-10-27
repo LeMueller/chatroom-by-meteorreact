@@ -3,6 +3,10 @@
 
 .sidebar-container {position:relative; top: 50px; left: -50px; height: 500px; width:150px; float:left; border: solid 1px red;}
 
+.filter {height: 50px;  border: solid 1px gray}
+
+#searchbar { width:100%;}
+
 .chat-container {position:relative; top: 50px; height:500px; width:400px; float:left; border:solid 1px green;}
 
 .current-chat-name {height: 50px; border: solid 1px yellow}
