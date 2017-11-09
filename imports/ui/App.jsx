@@ -52,15 +52,37 @@ class App extends Component{
 		event.preventDefault();
 		const text=document.getElementById('message-input').value;
 		const recipient=this.state.currentChat;
+		const recipientId= recipient._id;
 
 		if(text){
-			Meteor.call('messages.insert',text,recipient);
+
+			let recipientPubKey;
+			let encryptionResult;
+
+			this.props.publicKeys.map((item)=>{
+
+				console.log("item in publicKeys:::" + util.inspect(item,false,null));
+				console.log("recipientId:::" + recipientId);
+
+				if(item.UserId===recipientId){
+					recipientPubKey=item.publicKey;
+				}
+			})
+
+			if(recipientPubKey){
+				encryptionResult = cryptico.encrypt(text, recipientPubKey);
+			}
+
+			Meteor.call('messages.insert',encryptionResult, recipient);
 		}
 
 		document.getElementById('message-input').value='';
 	}
 
-	generatPubAndPriKeys(){
+	generatPubAndPriKeys(nextProps){
+
+		//console.log("in generatPubAndPriKeys()");
+
 		let publicKeysCollection = this.props.publicKeys;
 		let privateKeysCollection = this.props.privateKeys;
 
@@ -69,21 +91,24 @@ class App extends Component{
 
 		let Bits=1024;
 
-		if(this.props.currentUser){
-			if(this.props.currentUser._id){
+		if(nextProps.currentUser){
 
-				console.log("generate keys with currentUser");
 
-				let passPhrase = this.props.currentUser._id;
+
+			if(nextProps.currentUser._id){
+
+				console.log("generate keys with currentUser._id");
+
+				let passPhrase = nextProps.currentUser._id;
 
 				publicKeysCollection.map((item)=>{
-					if(item.userId===this.props.currentUser._id){
+					if(item.userId===nextProps.currentUser._id){
 						currentUserHasPubKey=true;
 					}
 				})
 
 				privateKeysCollection.map((item)=>{
-					if(item.userId===this.props.currentUser._id){
+					if(item.userId===nextProps.currentUser._id){
 						currentUserHasPriKey=true;
 					}
 				})
@@ -92,7 +117,7 @@ class App extends Component{
 
 					let userRSAKey= cryptico.generateRSAKey(passPhrase, Bits);
 
-					console.log(util.inspect(userRSAKey,false,null));
+					//console.log(util.inspect(userRSAKey,false,null));
 
 					let userPublicKeyString = cryptico.publicKeyString(userRSAKey);
 
@@ -136,11 +161,14 @@ class App extends Component{
 
 
 	componentWillReceiveProps(nextProps){
+
+		console.log("nextProps:::"+util.inspect(nextProps,false,null));
+
 		if(nextProps.currentUser){
 			if(nextProps.currentUser._id){
 				console.log(nextProps.currentUser._id);
 
-				this.generatPubAndPriKeys();
+				this.generatPubAndPriKeys(nextProps);
 			}
 		}
 	}
