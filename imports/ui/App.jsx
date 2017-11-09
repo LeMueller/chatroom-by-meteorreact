@@ -1,12 +1,17 @@
 import React, {Component} from 'react';
 import ReactDOM from 'react-dom';
 import {createContainer} from 'meteor/react-meteor-data';
+import 'cryptico-js';
 
 import Sidebar from './containers/Sidebar.jsx';
 import ChatContainer from './containers/ChatContainer.jsx';
 import Message from './components/Message.jsx';
 
 import {Messages} from '../api/messagesserver.js';
+import {PrivateKeys} from '../api/privateKeys.js';
+import {PublicKeys} from '../api/publicKeys.js';
+
+const util=require('util');
 
 
 
@@ -29,12 +34,9 @@ class App extends Component{
 		this.handleSelectUser = this.handleSelectUser.bind(this);
 		this.handleSubmit=this.handleSubmit.bind(this);
 		this.renderMessages = this.renderMessages.bind(this);
+		this.generatPubAndPriKeys=this.generatPubAndPriKeys.bind(this);
 	}
 
-	componentWillReceiveProps(nextProps){
-
-	}
-	
 	handleSelectUser(user){
 
 		if(user){
@@ -56,6 +58,52 @@ class App extends Component{
 		}
 
 		document.getElementById('message-input').value='';
+	}
+
+	generatPubAndPriKeys(){
+		let publicKeysCollection = this.props.publicKeys;
+		let privateKeysCollection = this.props.privateKeys;
+
+		let currentUserHasPubKey = false;
+		let currentUserHasPriKey = false;
+
+		let Bits=1024;
+
+		if(this.props.currentUser){
+			if(this.props.currentUser._id){
+
+				console.log("generate keys with currentUser");
+
+				let passPhrase = this.props.currentUser._id;
+
+				publicKeysCollection.map((item)=>{
+					if(item.userId===this.props.currentUser._id){
+						currentUserHasPubKey=true;
+					}
+				})
+
+				privateKeysCollection.map((item)=>{
+					if(item.userId===this.props.currentUser._id){
+						currentUserHasPriKey=true;
+					}
+				})
+
+				if(currentUserHasPubKey===false && currentUserHasPriKey===false){
+
+					let userRSAKey= cryptico.generateRSAKey(passPhrase, Bits);
+
+					console.log(util.inspect(userRSAKey,false,null));
+
+					let userPublicKeyString = cryptico.publicKeyString(userRSAKey);
+
+					Meteor.call('publicKeys.insert',userPublicKeyString);
+
+				  Meteor.call('privateKeys.insert',userRSAKey);
+
+				}
+			}
+		}
+
 	}
 
 	renderMessages(){
@@ -86,6 +134,17 @@ class App extends Component{
 		}
 	}
 
+
+	componentWillReceiveProps(nextProps){
+		if(nextProps.currentUser){
+			if(nextProps.currentUser._id){
+				console.log(nextProps.currentUser._id);
+
+				this.generatPubAndPriKeys();
+			}
+		}
+	}
+
 	render(){
 		return(
 			<div className="container">
@@ -102,14 +161,14 @@ class App extends Component{
 						renderMessages={this.renderMessages()}
 						onSubmit={this.handleSubmit}/>
 				</div>
-				
+
 			</div>
 		)
 	}
 }
 
 export default createContainer(()=>{
-	
+
 	Meteor.subscribe('messages');
 	Meteor.subscribe('all_users');
 
@@ -117,5 +176,7 @@ export default createContainer(()=>{
 		messages: Messages.find({}).fetch(),
 		currentUser: Meteor.user(),
 		allUsers: Meteor.users.find({}).fetch(),
+		publicKeys: PublicKeys.find({}).fetch(),
+		privateKeys: PrivateKeys.find({}).fetch(),
 	};
 },App);
