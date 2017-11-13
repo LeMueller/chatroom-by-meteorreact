@@ -8,6 +8,9 @@ Meteor.methods({
 	'publicKeys.insert'(key){
 		check(key, String);
 
+		console.log("Meteor.methods.privateKeys.insert");
+
+
 		if(! this.userId){
 			console.log("not-authorized!");
 		}
