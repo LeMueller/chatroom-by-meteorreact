@@ -81,7 +81,7 @@ class App extends Component{
 	}
 
 	generatPubAndPriKeys(nextProps){
-
+		console.log("this.props.allUsers:::"+util.inspect(this.props.allUsers,false,null));
 		//console.log("in generatPubAndPriKeys()");
 
 		let publicKeysCollection = this.props.publicKeys;
@@ -94,8 +94,8 @@ class App extends Component{
 
 		if(nextProps.currentUser){
 			if(nextProps.currentUser._id){
-				if(this.props.currentUser){
-					if(this.props.currentUser._id){
+
+						/**
 						if(nextP.currentUser._id==this.props.currentUser._id){
 							console.log("generate keys with currentUser._id");
 							let passPhrase = this.props.currentUser._id;
@@ -116,56 +116,13 @@ class App extends Component{
 
 								this.props.currentUser.hasKeys=true;
 							}
-
-							}
-
 						}
-					}
-				}
-				/**
-				//if(nextProps.currentUser.creatAt){
+						**/
 
-					console.log("generate keys with currentUser._id");
 
-					let passPhrase = nextProps.currentUser._id;
 
-					publicKeysCollection.map((item)=>{
-						console.log("publicKeysCollection.map");
-						if(item.userId===nextProps.currentUser._id){
-							currentUserHasPubKey=true;
-							console.log("currentUserHasPubKey=true;");
-						}else{
-							console.log("currentUserHasPubKey=false;");
-						}
-					})
-
-					privateKeysCollection.map((item)=>{
-						if(item.userId===nextProps.currentUser._id){
-							currentUserHasPriKey=true;
-							console.log("currentUserHasPriKey=true;");
-						}else{
-							console.log("currentUserHasRriKey=false;");
-						}
-					})
-
-	 				if(currentUserHasPubKey===false && currentUserHasPriKey===false){
-
-						let userRSAKey= cryptico.generateRSAKey(passPhrase, Bits);
-
-						//console.log(util.inspect(userRSAKey,false,null));
-
-						let userPublicKeyString = cryptico.publicKeyString(userRSAKey);
-
-						//console.log("publickeys insert");
-						Meteor.call('publicKeys.insert',userPublicKeyString);
-						currentUserHasPubKey=true;
-						//console.log("privatekeys insert");
-					  Meteor.call('privateKeys.insert',userRSAKey);
-						currentUserHasPriKey=true;
-					}
-				//}
-				**/
 			}
+
 		}
 
 	}
@@ -200,9 +157,9 @@ class App extends Component{
 
 
 	componentWillReceiveProps(nextProps){
-		console.log("this.props.currentUser:::"+util.inspect(this.props.currentUser,false,null));
+
 		console.log("nextProps:::"+util.inspect(nextProps,false,null));
-		console.log("this.props.currentUser:::"+util.inspect(this.props.currentUser,false,null));
+		console.log("this.props.allUsers:::"+util.inspect(this.props.allUsers,false,null));
 
 		if(nextProps.currentUser){
 			if(nextProps.currentUser._id){
