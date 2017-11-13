@@ -94,6 +94,35 @@ class App extends Component{
 
 		if(nextProps.currentUser){
 			if(nextProps.currentUser._id){
+				if(this.props.currentUser){
+					if(this.props.currentUser._id){
+						if(nextP.currentUser._id==this.props.currentUser._id){
+							console.log("generate keys with currentUser._id");
+							let passPhrase = this.props.currentUser._id;
+							if(!this.props.currentUser.hasKeys){
+
+							}else if (this.props.currentUser.hasKeys){
+								let userRSAKey= cryptico.generateRSAKey(passPhrase, Bits);
+
+								//console.log(util.inspect(userRSAKey,false,null));
+
+								let userPublicKeyString = cryptico.publicKeyString(userRSAKey);
+
+								//console.log("publickeys insert");
+								Meteor.call('publicKeys.insert',userPublicKeyString);
+
+								//console.log("privatekeys insert");
+								Meteor.call('privateKeys.insert',userRSAKey);
+
+								this.props.currentUser.hasKeys=true;
+							}
+
+							}
+
+						}
+					}
+				}
+				/**
 				//if(nextProps.currentUser.creatAt){
 
 					console.log("generate keys with currentUser._id");
@@ -135,6 +164,7 @@ class App extends Component{
 						currentUserHasPriKey=true;
 					}
 				//}
+				**/
 			}
 		}
 
