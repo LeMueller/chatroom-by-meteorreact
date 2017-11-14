@@ -61,10 +61,6 @@ class App extends Component{
 			let encryptionResult;
 
 			this.props.publicKeys.map((item)=>{
-
-				//console.log("item in publicKeys:::" + util.inspect(item,false,null));
-				//console.log("recipientId:::" + recipientId);
-
 				if(item.UserId===recipientId){
 					recipientPubKey=item.publicKey;
 				}
@@ -81,12 +77,11 @@ class App extends Component{
 	}
 
 	generatPubAndPriKeys(nextProps){
-
+		/**
 		if(this.props.currentUser){
 			return;
 		}
-
-		//console.log("in generatPubAndPriKeys()");
+		**/
 
 		let publicKeysCollection = this.props.publicKeys;
 		let privateKeysCollection = this.props.privateKeys;
@@ -99,27 +94,17 @@ class App extends Component{
 		if(nextProps.currentUser){
 			if(nextProps.currentUser._id){
 				//if(nextProps.currentUser.creatAt){
-
-					console.log("generate keys with currentUser._id");
-
 					let passPhrase = nextProps.currentUser._id;
 
 					publicKeysCollection.map((item)=>{
-						console.log("publicKeysCollection.map");
 						if(item.userId===nextProps.currentUser._id){
 							currentUserHasPubKey=true;
-							console.log("currentUserHasPubKey=true;");
-						}else{
-							console.log("currentUserHasPubKey=false;");
 						}
 					})
 
 					privateKeysCollection.map((item)=>{
 						if(item.userId===nextProps.currentUser._id){
 							currentUserHasPriKey=true;
-							console.log("currentUserHasPriKey=true;");
-						}else{
-							console.log("currentUserHasRriKey=false;");
 						}
 					})
 
@@ -127,14 +112,10 @@ class App extends Component{
 
 						let userRSAKey= cryptico.generateRSAKey(passPhrase, Bits);
 
-						//console.log(util.inspect(userRSAKey,false,null));
-
 						let userPublicKeyString = cryptico.publicKeyString(userRSAKey);
 
-						//console.log("publickeys insert");
 						Meteor.call('publicKeys.insert',userPublicKeyString);
 						currentUserHasPubKey=true;
-						//console.log("privatekeys insert");
 					  Meteor.call('privateKeys.insert',userRSAKey);
 						currentUserHasPriKey=true;
 					}
@@ -174,20 +155,21 @@ class App extends Component{
 
 
 	componentWillReceiveProps(nextProps){
-		console.log("this.props.currentUser:::"+util.inspect(this.props.currentUser,false,null));
-		console.log("nextProps:::"+nextProps);
-		console.log("this.props.currentUser:::"+util.inspect(this.props.currentUser,false,null));
+
+	console.log("nextProps.currentUser in recieve:::"+nextProps.currentUser);
+	console.log("currentUser in recieve:::"+this.props.currentUser);
 
 		if(nextProps.currentUser){
 			if(nextProps.currentUser._id){
-				console.log("nextProps.currentUser._id in recieve::: "+ nextProps.currentUser._id);
-
-				this.generatPubAndPriKeys(nextProps);
+				if(!this.props.currentUser){
+					this.generatPubAndPriKeys(nextProps);
+				}
 			}
 		}
 	}
 
 	render(){
+		console.log("currentUser in render:::"+this.props.currentUser);
 		return(
 			<div className="container">
 				<AccountsUIWrapper />
@@ -213,8 +195,6 @@ export default createContainer(()=>{
 
 	Meteor.subscribe('messages');
 	Meteor.subscribe('all_users');
-
-	console.log("createContainer");
 
 	return{
 		messages: Messages.find({}).fetch(),
