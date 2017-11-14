@@ -53,8 +53,8 @@ class App extends Component{
 		const recipient=this.state.currentChat;
 		const recipientId= recipient._id;
 
-		console.log("in submit recipientId" + recipientId);
-		console.log("in submit this.props.currentUser" + this.props.currentUser);
+		//console.log("in submit recipientId" + recipientId);
+		//console.log("in submit this.props.currentUser" + this.props.currentUser);
 
 		//encrytion of text
 		if(text){
@@ -64,19 +64,19 @@ class App extends Component{
 			let encryptionText;
 
 			this.props.publicKeys.map((item)=>{
-				console.log("in submit publicKey map" + item.userId);
+				//console.log("in submit publicKey map" + item.userId);
 				if(item.userId===recipientId){
 					recipientPubKey=item.publicKey;
 				}
 			})
 
-			console.log("in submit recipientPubKey" + recipientPubKey);
+			//console.log("in submit recipientPubKey" + recipientPubKey);
 
 			if(recipientPubKey){
 				encryptionResult = cryptico.encrypt(text, recipientPubKey);
 			}
 
-			console.log("in submit encryptionResult" + util.inspect(encryptionResult,false,null));
+			//console.log("in submit encryptionResult" + util.inspect(encryptionResult,false,null));
 
 			encryptionText=encryptionResult.cipher;
 
@@ -136,11 +136,30 @@ class App extends Component{
 	}
 
 	renderMessages(){
+
+		let recipientPriKey;
+		let decryptedText;
+		let encryptedText;
+		let decryptedTextArray=[];
+		let encryptedTextArray=[];
+		let selectedMessages
+
+		console.log("in renderMessage currentUser:::"+this.props.currentUser);
+
+		this.props.privateKeys.map((item)=>{
+			console.log("in renderMessage item:::"+item.userId);
+			if(item.userId==this.props.currentUser._id){
+				recipientPriKey=item.rsaKey;
+			}
+		})
+
+		console.log("in renderMessages recipientPrivatKey:::"+recipientPriKey);
+
 		let messages=this.props.messages;
 
 		if(this.props.currentUser && this.state.currentChat){
 
-			let selectedMessages=messages.filter(message=>{
+			selectedMessages=messages.filter(message=>{
 
 				if(message.author.id===this.props.currentUser._id && message.recipient._id === this.state.currentChat._id){
 
@@ -153,6 +172,29 @@ class App extends Component{
 					return message;
 				}
 			})
+
+			console.log("in renderMessages selectedMessages[0]:::"+util.inspect(selectedMessages[0],false,null));
+
+			//copy selectedMessages to encryptedTextArray
+			selectedMessages.map((item, index)=>{
+				console.log(index);
+				encryptedTextArray[index]=item;
+			})
+
+			if(encryptedTextArray){
+				console.log("in renderMessages encryptedTextArray[0]:::"+util.inspect(encryptedTextArray[0],false,null));
+			}
+
+			/**  BUG！！！！！！！！！！！！！！
+			//decryption
+			encryptedTextArray.map((item,index)=>{
+				item.text=crytico.decrypt(item.text, recipientPriKey);
+			})
+
+			console.log("in renderMessages encryptedTextArray[0]:::"+util.inspect(encryptedTextArray[0],false,null));
+			**/
+
+			//console.log("in renderMessages decryptedTextArray:::"+decryptedTextArray)
 
 			return selectedMessages.map((message,index)=>(
 				<Message
