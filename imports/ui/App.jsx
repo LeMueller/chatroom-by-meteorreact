@@ -146,9 +146,11 @@ class App extends Component{
 
 		console.log("in renderMessage currentUser:::"+this.props.currentUser);
 
+		console.log("in renderMessage currentChat._id:::"+ this.state.currentChat._id);
 		this.props.privateKeys.map((item)=>{
-			console.log("in renderMessage item:::"+item.userId);
-			if(item.userId==this.props.currentUser._id){
+			console.log("in renderMessage item.userId:::"+item.userId);
+
+			if(item.userId==this.state.currentChat._id){
 				recipientPriKey=item.rsaKey;
 			}
 		})
@@ -173,25 +175,25 @@ class App extends Component{
 				}
 			})
 
-			console.log("in renderMessages selectedMessages[0]:::"+util.inspect(selectedMessages[0],false,null));
-
 			//copy selectedMessages to encryptedTextArray
 			selectedMessages.map((item, index)=>{
-				console.log(index);
+				console.log("copy "+index);
 				encryptedTextArray[index]=item;
 			})
 
-			if(encryptedTextArray){
+			if(encryptedTextArray[0]){
 				console.log("in renderMessages encryptedTextArray[0]:::"+util.inspect(encryptedTextArray[0],false,null));
+				console.log("encryptedTextArray[0].text:::"+ encryptedTextArray[0].text);
+				console.log("recipientPriKey:::"+ util.inspect(recipientPriKey,false,null));
+				console.log("plaintext"+ (cryptico.decrypt(encryptedTextArray[0].text, recipientPriKey)));
 			}
 
-			/**  BUG！！！！！！！！！！！！！！
+
+			/**
 			//decryption
 			encryptedTextArray.map((item,index)=>{
-				item.text=crytico.decrypt(item.text, recipientPriKey);
+				console.log("item.text"+ (cryptico.decrypt(item.text, recipientPriKey)).plaintext);
 			})
-
-			console.log("in renderMessages encryptedTextArray[0]:::"+util.inspect(encryptedTextArray[0],false,null));
 			**/
 
 			//console.log("in renderMessages decryptedTextArray:::"+decryptedTextArray)
