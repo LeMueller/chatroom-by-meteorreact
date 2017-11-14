@@ -82,6 +82,10 @@ class App extends Component{
 
 	generatPubAndPriKeys(nextProps){
 
+		if(this.props.currentUser){
+			return;
+		}
+
 		//console.log("in generatPubAndPriKeys()");
 
 		let publicKeysCollection = this.props.publicKeys;
@@ -171,12 +175,12 @@ class App extends Component{
 
 	componentWillReceiveProps(nextProps){
 		console.log("this.props.currentUser:::"+util.inspect(this.props.currentUser,false,null));
-		console.log("nextProps:::"+util.inspect(nextProps,false,null));
+		console.log("nextProps:::"+nextProps);
 		console.log("this.props.currentUser:::"+util.inspect(this.props.currentUser,false,null));
 
 		if(nextProps.currentUser){
 			if(nextProps.currentUser._id){
-				//console.log("nextProps.currentUser._id::: "+ nextProps.currentUser._id);
+				console.log("nextProps.currentUser._id in recieve::: "+ nextProps.currentUser._id);
 
 				this.generatPubAndPriKeys(nextProps);
 			}
@@ -209,6 +213,8 @@ export default createContainer(()=>{
 
 	Meteor.subscribe('messages');
 	Meteor.subscribe('all_users');
+
+	console.log("createContainer");
 
 	return{
 		messages: Messages.find({}).fetch(),
