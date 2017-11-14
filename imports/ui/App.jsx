@@ -38,7 +38,6 @@ class App extends Component{
 	}
 
 	handleSelectUser(user){
-
 		if(user){
 			this.setState({
 				currentChat:user
@@ -54,23 +53,34 @@ class App extends Component{
 		const recipient=this.state.currentChat;
 		const recipientId= recipient._id;
 
+		console.log("in submit recipientId" + recipientId);
+		console.log("in submit this.props.currentUser" + this.props.currentUser);
+
 		//encrytion of text
 		if(text){
 
 			let recipientPubKey;
 			let encryptionResult;
+			let encryptionText;
 
 			this.props.publicKeys.map((item)=>{
-				if(item.UserId===recipientId){
+				console.log("in submit publicKey map" + item.userId);
+				if(item.userId===recipientId){
 					recipientPubKey=item.publicKey;
 				}
 			})
+
+			console.log("in submit recipientPubKey" + recipientPubKey);
 
 			if(recipientPubKey){
 				encryptionResult = cryptico.encrypt(text, recipientPubKey);
 			}
 
-			Meteor.call('messages.insert',encryptionResult, recipient);
+			console.log("in submit encryptionResult" + util.inspect(encryptionResult,false,null));
+
+			encryptionText=encryptionResult.cipher;
+
+			Meteor.call('messages.insert',encryptionText, recipient);
 		}
 
 		document.getElementById('message-input').value='';
@@ -156,8 +166,8 @@ class App extends Component{
 
 	componentWillReceiveProps(nextProps){
 
-	console.log("nextProps.currentUser in recieve:::"+nextProps.currentUser);
-	console.log("currentUser in recieve:::"+this.props.currentUser);
+	//console.log("nextProps.currentUser in recieve:::"+nextProps.currentUser);
+	//console.log("currentUser in recieve:::"+this.props.currentUser);
 
 		if(nextProps.currentUser){
 			if(nextProps.currentUser._id){
@@ -169,7 +179,7 @@ class App extends Component{
 	}
 
 	render(){
-		console.log("currentUser in render:::"+this.props.currentUser);
+		//console.log("currentUser in render:::"+this.props.currentUser);
 		return(
 			<div className="container">
 				<AccountsUIWrapper />
