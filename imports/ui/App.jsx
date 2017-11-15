@@ -45,7 +45,26 @@ class App extends Component{
 		this.testEncryptionResult;
 		this.testCipherText;
 		this.testDecryptionResult;
+
+		this.encryption=this.encryption.bind(this);
 	}
+
+	//for test
+	encryption(){
+    var PassPhrase = "XdX69LTC8d3DvfhHu";
+		var PassPhrase2 = "XdX69LTC8d3DvfhHu2";
+    var Bits = 1024;
+    var MattsRSAkey = cryptico.generateRSAKey(PassPhrase, Bits);
+    var MattsRSAkey2 = cryptico.generateRSAKey(PassPhrase2, Bits);
+    console.log(MattsRSAkey);
+    var MattsPublicKeyString = cryptico.publicKeyString(MattsRSAkey);   var PlainText = "Matt, I need you to help me with my Starcraft strategy.";
+    var EncryptionResult = cryptico.encrypt(PlainText, MattsPublicKeyString);
+    console.log(EncryptionResult.cipher);
+    var CipherText = EncryptionResult.cipher;
+		alert(CipherText);
+    var DecryptionResult = cryptico.decrypt(CipherText, MattsRSAkey);//with MattsRSAKey2 ist undefined
+    alert(DecryptionResult.plaintext);
+  }
 
 	handleSelectUser(user){
 		if(user){
@@ -72,8 +91,14 @@ class App extends Component{
 		this.testEncryptionResult=cryptico.encrypt(this.testPlainText,this.testPublicKeyString);
 		this.testCipherText=this.testEncryptionResult.cipher;
 		console.log("!!!this.testCipherText:::"+this.testCipherText);
-		this.testDecryptionResult=cryptico.decypt(this.testCipherText, this.testRSAKey),
-		console.log("!!!this.testDecryptionResult.plaintext:::"+this.testDecryptionResult.plaintext);
+		console.log("!!!this.testRSAKey:::"+this.testRSAKey);
+		if(this.testCipherText && this.testRSAKey){
+			this.testDecryptionResult=cryptico.decrypt(this.testCipherText, this.testRSAKey),
+			console.log("!!!this.testDecryptionResult.plaintext:::"+this.testDecryptionResult.plaintext);
+		}
+
+
+		this.encryption();
 		//for test end
 
 		//console.log("in submit recipientId" + recipientId);
@@ -212,12 +237,12 @@ class App extends Component{
 				encryptedTextArray[index]=item;
 			})
 
-			if(encryptedTextArray[0]){
-				console.log("in renderMessages encryptedTextArray[0]:::"+util.inspect(encryptedTextArray[0],false,null));
-				console.log("encryptedTextArray[0].text:::"+ encryptedTextArray[0].text);
+			if(encryptedTextArray[4]){
+				console.log("in renderMessages encryptedTextArray[4]:::"+util.inspect(encryptedTextArray[4],false,null));
+				console.log("encryptedTextArray[4].text:::"+ encryptedTextArray[4].text);
 				console.log("this.state.currentChat.username:::"+ this.state.currentChat.username);
 				console.log("recipientPriKey:::"+ util.inspect(recipientPriKey,false,null));
-				//console.log("plaintext"+ (cryptico.decrypt(encryptedTextArray[0].text, recipientPriKey)));
+				console.log("plaintext"+ (cryptico.decrypt(encryptedTextArray[4].text, recipientPriKey)));
 			}
 
 
