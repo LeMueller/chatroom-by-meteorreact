@@ -35,6 +35,16 @@ class App extends Component{
 		this.handleSubmit=this.handleSubmit.bind(this);
 		this.renderMessages = this.renderMessages.bind(this);
 		this.generatPubAndPriKeys=this.generatPubAndPriKeys.bind(this);
+
+		this.testToEncryptText;
+		this.testPassPhrase;
+		this.testBits=1024;
+		this.testRSAKey;
+		this.testPublicKeyString;
+		this.testPlainText;
+		this.testEncryptionResult;
+		this.testCipherText;
+		this.testDecryptionResult;
 	}
 
 	handleSelectUser(user){
@@ -53,6 +63,19 @@ class App extends Component{
 		const recipient=this.state.currentChat;
 		const recipientId= recipient._id;
 
+
+		//for test begin
+		this.testPlainText="text";
+		console.log("!!!this.testPlainText:::"+this.testPlainText);
+		console.log("!!!this.testPublicKeyString:::"+this.testPublicKeyString);
+
+		this.testEncryptionResult=cryptico.encrypt(this.testPlainText,this.testPublicKeyString);
+		this.testCipherText=this.testEncryptionResult.cipher;
+		console.log("!!!this.testCipherText:::"+this.testCipherText);
+		this.testDecryptionResult=cryptico.decypt(this.testCipherText, this.testRSAKey),
+		console.log("!!!this.testDecryptionResult.plaintext:::"+this.testDecryptionResult.plaintext);
+		//for test end
+
 		//console.log("in submit recipientId" + recipientId);
 		//console.log("in submit this.props.currentUser" + this.props.currentUser);
 
@@ -66,11 +89,12 @@ class App extends Component{
 			this.props.publicKeys.map((item)=>{
 				//console.log("in submit publicKey map" + item.userId);
 				if(item.userId===recipientId){
+					console.log("message encrypted with pubkey of " + item.userId);
 					recipientPubKey=item.publicKey;
 				}
 			})
 
-			//console.log("in submit recipientPubKey" + recipientPubKey);
+			console.log("in submit recipientPubKey" + recipientPubKey);
 
 			if(recipientPubKey){
 				encryptionResult = cryptico.encrypt(text, recipientPubKey);
@@ -92,6 +116,13 @@ class App extends Component{
 			return;
 		}
 		**/
+
+		//for test begin
+		this.testPassPhrase="XdX69LTC8d3DvfhHu";
+		this.testRSAKey=cryptico.generateRSAKey(this.testPassPhrase,this.testBits);
+		this.testPublicKeyString=cryptico.publicKeyString(this.testRSAKey);
+		console.log("!!!this.testPublicKeyString:::"+this.testPublicKeyString);
+		//for test end
 
 		let publicKeysCollection = this.props.publicKeys;
 		let privateKeysCollection = this.props.privateKeys;
@@ -184,8 +215,9 @@ class App extends Component{
 			if(encryptedTextArray[0]){
 				console.log("in renderMessages encryptedTextArray[0]:::"+util.inspect(encryptedTextArray[0],false,null));
 				console.log("encryptedTextArray[0].text:::"+ encryptedTextArray[0].text);
+				console.log("this.state.currentChat.username:::"+ this.state.currentChat.username);
 				console.log("recipientPriKey:::"+ util.inspect(recipientPriKey,false,null));
-				console.log("plaintext"+ (cryptico.decrypt(encryptedTextArray[0].text, recipientPriKey)));
+				//console.log("plaintext"+ (cryptico.decrypt(encryptedTextArray[0].text, recipientPriKey)));
 			}
 
 
